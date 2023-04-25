@@ -12,7 +12,7 @@ const game = {
     },
     shipInstance: undefined,
     shipSpecs: {
-        pos: undefined,
+        pos: { x: undefined, y: undefined },
         size: { w: 70, h: 70 }
     },
     backgroundInstance: undefined,
@@ -72,15 +72,15 @@ const game = {
         )
     },
     // DIBUJAR FONDO
-    drawBackground() {
-        this.ctx.drawImage(
-            this.backgroundInstance,
-            this.backgroundSpecs.pos.x,
-            this.backgroundSpecs.pos.y,
-            this.backgroundSpecs.size.w,
-            this.backgroundSpecs.size.h
-        )
-    },
+    // drawBackground() {
+    //     this.ctx.drawImage(
+    //         this.backgroundInstance,
+    //         this.backgroundSpecs.pos.x,
+    //         this.backgroundSpecs.pos.y,
+    //         this.backgroundSpecs.size.w,
+    //         this.backgroundSpecs.size.h
+    //     )
+    // },
 
     // CREAR INVASORES
     createInvaders1() {
@@ -95,7 +95,7 @@ const game = {
 
     //DIBUJAR TODO
     drawAll() {
-        this.drawBackground()
+        // this.drawBackground()
         this.drawShip()
         this.invaders1.slice(0, 48).forEach((eachInvader) => {
             return eachInvader.drawInvaders1()
@@ -120,16 +120,20 @@ const game = {
     // CONTROLES NAVE
     setEventListeners() {
         document.onkeydown = event => {
-
             const { key } = event
-
-            if (key == 'ArrowLeft' && this.shipSpecs.pos.x > 15) {
-                console.log(this.shipSpecs.pos.x)
+            if (key == 'ArrowLeft') {
                 this.shipSpecs.pos.x -= 50
+                if (this.shipSpecs.pos.x < 0) {
+                    this.shipSpecs.pos.x = 0
+                }
             }
 
-            if (key == 'ArrowRight' && this.shipSpecs.pos.x < this.canvasSize.w - this.shipSpecs.size.w - 15) {
+            if (key == 'ArrowRight') {
+                console.log(this.shipSpecs.pos.x)
                 this.shipSpecs.pos.x += 50
+                if (this.shipSpecs.pos.x > 1000 - this.shipSpecs.size.w) {
+                    this.shipSpecs.pos.x = 1000 - this.shipSpecs.size.w
+                }
             }
             if (key == ' ' && this.canShoot) {
                 this.shipShoot()
