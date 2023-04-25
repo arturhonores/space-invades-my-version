@@ -22,22 +22,26 @@ const game = {
     },
     invaders1: [],
     bullets: [],
+    invadersBullets: [],
     canShoot: true,
+    invadersCanShoot: true,
+
     //INIT
     init() {
         this.setContext()
         this.setImageInstances()
-        this.start()
         this.setEventListeners()
+        this.createInvaders1()
+        this.start()
     },
     // CORAZÓN
     start() {
         this.intervalId = setInterval(() => {
             this.clearAll()
             this.drawAll()
-            this.collisionbulletShip() ? this.gameOver() : null
             this.collisionInvadersShip() ? this.gameOver() : null
-            this.frameIndex++
+            this.collisionbulletInvaders()
+            this.invadersShoot()
         }, 50)
     },
     //CTX
@@ -56,8 +60,7 @@ const game = {
     setImageInstances() {
         this.shipInstance = new Image()
         this.shipInstance.src = "../images/ship.png"
-        // this.backgroundInstance = new Image()
-        // this.backgroundInstance.src = "../images/background.jpg"
+
     },
 
     // DIBUJAR NAVE
@@ -70,37 +73,35 @@ const game = {
             this.shipSpecs.size.h
         )
     },
-    // DIBUJAR FONDO
-    // drawBackground() {
-    //     this.ctx.drawImage(
-    //         this.backgroundInstance,
-    //         this.backgroundSpecs.pos.x,
-    //         this.backgroundSpecs.pos.y,
-    //         this.backgroundSpecs.size.w,
-    //         this.backgroundSpecs.size.h
-    //     )
-    // },
+
 
     // CREAR INVASORES
     createInvaders1() {
-        const invaders1Xposition = [110, 160, 210, 260, 310, 360, 410, 460, 510, 560, 610, 660, 710, 760, 810, 860]
+        console.log("CREANDO INVASORES")
+        const invaders1Xposition = [160, 210, 260, 310, 360, 410, 460, 510, 560, 610, 660, 710, 760, 810]
         invaders1Xposition.forEach((duplicated) => {
-            return this.invaders1.push(new Invaders1(this.ctx, this.canvasSize, this.invaders1Instance, duplicated))
+            return this.invaders1.push(
+                new Invaders1(this.ctx, this.canvasSize, this.invaders1Instance, duplicated, 50),
+                new Invaders1(this.ctx, this.canvasSize, this.invaders1Instance, duplicated, 100),
+                new Invaders1(this.ctx, this.canvasSize, this.invaders1Instance, duplicated, 150),
+            )
         })
+
     },
 
     //DIBUJAR TODO
     drawAll() {
-        // this.drawBackground()
+        console.log("DIBUJANDO INVASORES")
+        this.frameIndex++
         this.drawShip()
-        this.invaders1.slice(0, 48).forEach((eachInvader) => {
+        this.invaders1.forEach((eachInvader) => {
             return eachInvader.drawInvaders1()
         })
-        if (this.frameIndex % 70 === 0) {
-            this.createInvaders1()
-        }
         this.bullets.forEach((eachBullet) => {
             eachBullet.drawBullets()
+        })
+        this.invadersBullets.forEach((eachInvaderbullet) => {
+            eachInvaderbullet.drawInvadersBullet()
         })
     },
 
@@ -114,31 +115,31 @@ const game = {
         document.onkeydown = event => {
             const { key } = event
             if (key == 'ArrowLeft') {
-                this.shipSpecs.pos.x -= 30
+                this.shipSpecs.pos.x -= 50
                 if (this.shipSpecs.pos.x < 0) {
                     this.shipSpecs.pos.x = 0
                 }
             }
 
             if (key == 'ArrowRight') {
-                console.log(this.shipSpecs.pos.x)
-                this.shipSpecs.pos.x += 30
+                this.shipSpecs.pos.x += 50
                 if (this.shipSpecs.pos.x > 1000 - this.shipSpecs.size.w) {
                     this.shipSpecs.pos.x = 1000 - this.shipSpecs.size.w
                 }
             }
-            if (key == ' ' && this.canShoot) {
+            if (key == 'ArrowUp' && this.canShoot) {
                 this.shipShoot()
                 this.canShoot = false
                 setTimeout(() => {
                     this.canShoot = true
-                }, 500) // Tiempo de espera en milisegundos
+                }, 500) // Tiempo de espera en milisegundos entre disparos
             }
         }
     },
 
     // COLISIONES
     collisionInvadersShip() {
+        // console.log("MÉTODO COLISIÓN INVADER vs NAVE")
         return this.invaders1.some((inv) => {
             return this.shipSpecs.pos.x + this.shipSpecs.size.w >= inv.invaders1Specs.pos.x &&
                 this.shipSpecs.pos.x <= inv.invaders1Specs.pos.x + inv.invaders1Specs.size.w &&
@@ -147,25 +148,47 @@ const game = {
         })
     },
 
-    collisionbulletShip() {
-        let collisionDetected = false
-        this.bullets.forEach((bullet, bulletIndex) => {
-            if (
-                bullet.bulletsSpecs.pos.y <= this.shipSpecs.pos.y + this.shipSpecs.size.h &&
-                bullet.bulletsSpecs.pos.y + bullet.bulletsSpecs.size.h >= this.shipSpecs.pos.y &&
-                bullet.bulletsSpecs.pos.x + bullet.bulletsSpecs.size.w >= this.shipSpecs.pos.x &&
-                bullet.bulletsSpecs.pos.x <= this.shipSpecs.pos.x + this.shipSpecs.size.w
-            ) {
-                collisionDetected = true
-                bullet.shouldRemove = true
+    collisionbulletInvaders() {
+        // console.log("BUSCANDO COLISION BALA CONTRA INVADER")
+        for (let i = 0; i < this.bullets.length; i++) {
+            for (let j = 0; j < this.invaders1.length; j++) {
+                //HITBOX
+                if (
+                    this.bullets[i].shipBulletsSpecs.pos.x + this.bullets[i].shipBulletsSpecs.size.w >= this.invaders1[j].invaders1Specs.pos.x &&
+                    this.bullets[i].shipBulletsSpecs.pos.x <= this.invaders1[j].invaders1Specs.pos.x + this.invaders1[j].invaders1Specs.size.w &&
+                    this.bullets[i].shipBulletsSpecs.pos.y + this.bullets[i].shipBulletsSpecs.size.h >= this.invaders1[j].invaders1Specs.pos.y &&
+                    this.bullets[i].shipBulletsSpecs.pos.y <= this.invaders1[j].invaders1Specs.pos.y + this.invaders1[j].invaders1Specs.size.h
+                ) {
+
+                    // Elimina la bala y el invasor de sus respectivos arrays
+                    this.bullets.splice(i, 1);
+                    this.invaders1.splice(j, 1);
+
+                    // Detiene el bucle interno para evitar múltiples colisiones con la misma bala
+                    break;
+                }
             }
-        })
-        this.bullets = this.bullets.filter((bullet) => !bullet.shouldRemove)
-        return collisionDetected
+        }
     },
 
-    // CREAR DISPARO
+    // CREAR DISPAROS
+    invadersShoot() {
+        if (this.invadersCanShoot) {
+            this.invadersCanShoot = false
+            for (let i = 0; i < this.invaders1.length; i++) {
+                const currentInvader = this.invaders1[i]
+                const bulletPosX = currentInvader.invaders1Specs.pos.x + currentInvader.invaders1Specs.size.w / 2 - 10
+                const bulletPosY = currentInvader.invaders1Specs.pos.y + currentInvader.invaders1Specs.size.h / 2
+                this.invadersBullets.push(new InvadersBullet(this.ctx, this.canvasSize, this.invadersBulletsInstance, bulletPosX, bulletPosY))
+            }
+            setTimeout(() => {
+                this.invadersCanShoot = true
+            }, 8000)
+        }
+    },
+
     shipShoot() {
+        console.log("nave dispara")
         this.bullets.push(new ShipBullets(this.ctx, this.canvasSize, this.shipBulletsInstance, this.shipSpecs.pos.x + 30, 585 - this.shipSpecs.size.h))
     },
 

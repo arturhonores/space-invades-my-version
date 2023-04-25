@@ -1,11 +1,11 @@
 class Invaders1 {
-    constructor(ctx, canvasSize, invaders1Instance, posX) {
+    constructor(ctx, canvasSize, invaders1Instance, posX, posY) {
         this.ctx = ctx
         this.canvasSize = canvasSize
         this.invaders1Instance = invaders1Instance
         this.invaders1Specs = {
             size: { w: 40, h: 40 },
-            pos: { x: posX, y: 50 }
+            pos: { x: posX, y: posY }
         }
         this.initInvaders1()
     }
@@ -27,7 +27,7 @@ class Invaders1 {
     }
 
     move() {
-        this.invaders1Specs.pos.y += .7
+        this.invaders1Specs.pos.y += .4
     }
 }
 

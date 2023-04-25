@@ -1,5 +1,4 @@
 class ShipBullets {
-    // constructor(ctx, canvasSize, shipBulletsInstance, shipPosX, shipW, shipH) {
     constructor(ctx, canvasSize, shipBulletsInstance, shipX, shipH) {
         this.ctx = ctx
         this.canvasSize = canvasSize
@@ -15,7 +14,7 @@ class ShipBullets {
     initBullets() {
         this.shipBulletsInstance = new Image()
         this.shipBulletsInstance.src = "../images/bullet.png"
-        console.log("FUNCIONA INITBULLETS")
+        console.log("MÉTODO DISPARO NAVE")
     }
 
     drawBullets() {
