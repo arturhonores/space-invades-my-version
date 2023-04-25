@@ -35,6 +35,7 @@ const game = {
         this.intervalId = setInterval(() => {
             this.clearAll()
             this.drawAll()
+            this.collisionbulletShip() ? this.gameOver() : null
             this.collisionInvadersShip() ? this.gameOver() : null
             this.frameIndex++
         }, 50)
@@ -55,10 +56,8 @@ const game = {
     setImageInstances() {
         this.shipInstance = new Image()
         this.shipInstance.src = "../images/ship.png"
-        this.backgroundInstance = new Image()
-        this.backgroundInstance.src = "../images/background.jpg"
-        // this.invaders1Instance = new Image()
-        // this.invaders1Instance.src = "../images/invaders1.png"
+        // this.backgroundInstance = new Image()
+        // this.backgroundInstance.src = "../images/background.jpg"
     },
 
     // DIBUJAR NAVE
@@ -88,9 +87,6 @@ const game = {
         invaders1Xposition.forEach((duplicated) => {
             return this.invaders1.push(new Invaders1(this.ctx, this.canvasSize, this.invaders1Instance, duplicated))
         })
-
-        // this.invaders1.push(
-        //     new Invaders1(this.ctx, this.canvasSize, this.invaders1Instance, invaders1Xposition[randomIndexPosition]))
     },
 
     //DIBUJAR TODO
@@ -106,10 +102,6 @@ const game = {
         this.bullets.forEach((eachBullet) => {
             eachBullet.drawBullets()
         })
-        // if (this.frameIndex % 30 === 0) {
-        //     this.shipShoot()
-        // }
-
     },
 
     // BORRAR TODO
@@ -122,7 +114,7 @@ const game = {
         document.onkeydown = event => {
             const { key } = event
             if (key == 'ArrowLeft') {
-                this.shipSpecs.pos.x -= 50
+                this.shipSpecs.pos.x -= 30
                 if (this.shipSpecs.pos.x < 0) {
                     this.shipSpecs.pos.x = 0
                 }
@@ -130,7 +122,7 @@ const game = {
 
             if (key == 'ArrowRight') {
                 console.log(this.shipSpecs.pos.x)
-                this.shipSpecs.pos.x += 50
+                this.shipSpecs.pos.x += 30
                 if (this.shipSpecs.pos.x > 1000 - this.shipSpecs.size.w) {
                     this.shipSpecs.pos.x = 1000 - this.shipSpecs.size.w
                 }
@@ -140,24 +132,39 @@ const game = {
                 this.canShoot = false
                 setTimeout(() => {
                     this.canShoot = true
-                }, 700) // Tiempo de espera en milisegundos
+                }, 500) // Tiempo de espera en milisegundos
             }
         }
     },
 
-    // CREAR COLISIÓN INVADER CONTRA NAVE
-
+    // COLISIONES
     collisionInvadersShip() {
         return this.invaders1.some((inv) => {
             return this.shipSpecs.pos.x + this.shipSpecs.size.w >= inv.invaders1Specs.pos.x &&
                 this.shipSpecs.pos.x <= inv.invaders1Specs.pos.x + inv.invaders1Specs.size.w &&
                 this.shipSpecs.pos.y + this.shipSpecs.size.h >= inv.invaders1Specs.pos.y &&
-                this.shipSpecs.pos.y <= inv.invaders1Specs.pos.y + 40
+                this.shipSpecs.pos.y <= inv.invaders1Specs.pos.y + 40 //40 = altura invaders
         })
     },
 
-    // CREAR DISPARO
+    collisionbulletShip() {
+        let collisionDetected = false
+        this.bullets.forEach((bullet, bulletIndex) => {
+            if (
+                bullet.bulletsSpecs.pos.y <= this.shipSpecs.pos.y + this.shipSpecs.size.h &&
+                bullet.bulletsSpecs.pos.y + bullet.bulletsSpecs.size.h >= this.shipSpecs.pos.y &&
+                bullet.bulletsSpecs.pos.x + bullet.bulletsSpecs.size.w >= this.shipSpecs.pos.x &&
+                bullet.bulletsSpecs.pos.x <= this.shipSpecs.pos.x + this.shipSpecs.size.w
+            ) {
+                collisionDetected = true
+                bullet.shouldRemove = true
+            }
+        })
+        this.bullets = this.bullets.filter((bullet) => !bullet.shouldRemove)
+        return collisionDetected
+    },
 
+    // CREAR DISPARO
     shipShoot() {
         this.bullets.push(new ShipBullets(this.ctx, this.canvasSize, this.shipBulletsInstance, this.shipSpecs.pos.x + 30, 585 - this.shipSpecs.size.h))
     },

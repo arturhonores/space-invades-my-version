@@ -5,7 +5,7 @@ class ShipBullets {
         this.canvasSize = canvasSize
         this.shipBulletsInstance = shipBulletsInstance
         this.shipBulletsSpecs = {
-            size: { w: 10, h: 30 },
+            size: { w: 5, h: 20 },
             pos: { x: shipX, y: shipH },
         }
         this.velY = 10
