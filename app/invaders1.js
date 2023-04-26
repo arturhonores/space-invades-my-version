@@ -12,7 +12,7 @@ class Invaders1 {
 
     initInvaders1() {
         this.invaders1Instance = new Image()
-        this.invaders1Instance.src = "../images/invader-green.svg"
+        this.invaders1Instance.src = "../images/greeninvader.png"
     }
 
     drawInvaders1() {

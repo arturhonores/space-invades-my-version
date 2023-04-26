@@ -4,7 +4,7 @@ class InvadersBullet {
         this.canvasSize = canvasSize
         this.invadersBulletsInstance = invadersBulletsInstance
         this.invadersBulletSpecs = {
-            size: { w: 20, h: 20 },
+            size: { w: 6, h: 15 },
             pos: { x: posX, y: posY }
         }
         this.velY = 3
@@ -13,7 +13,7 @@ class InvadersBullet {
 
     initInvadersBullet() {
         this.invadersBulletInstance = new Image()
-        this.invadersBulletInstance.src = "../images/invadersBullet.png"
+        this.invadersBulletInstance.src = "../images/bulletinvader.svg"
     }
 
     drawInvadersBullet() {

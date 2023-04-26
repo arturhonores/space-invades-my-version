@@ -7,7 +7,8 @@ body {
     padding: 0;
     margin: 0;
     display: flex;
-    flex-direction: column;
+    gap: 4rem;
+    flex-direction: row;
     height: 100vh;
     justify-content: center;
     align-items: center;
@@ -15,17 +16,82 @@ body {
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
-
 }
 
-/* #myCanvas {
+#start-button {
+    position: relative;
+    display: inline-block;
+    margin: 0 20px;
+}
+
+#start-button a {
+    color: white;
+    font-family: offbittrialBold, sans-serif;
+    font-weight: bold;
+    font-size: 18px;
+    text-align: center;
+    text-decoration: none;
+    /* background-color: #FFA12B; */
+    background-color: rgb(147, 239, 8);
+    display: block;
+    position: relative;
+    padding: 15px 30px;
+
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    text-shadow: 0px 1px 0px #000;
+    filter: dropshadow(color=#000, offx=0px, offy=1px);
+
+    /* box-shadow: inset 0 1px 0 #FFE5C4, 0 10px 0 #915100; */
+    box-shadow: inset 0 1px 0 #FFE5C4, 0 10px 0 green;
+
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+#start-button a:active {
+    top: 10px;
+    /* background-color: #F78900; */
+    background-color: rgb(77, 127, 3);
+
+    -webkit-box-shadow: inset 0 1px 0 #FFE5C4, inset 0 -3px 0 #915100;
+    -moz-box-shadow: inset 0 1px 0 #FFE5C4, inset 0 -3pxpx 0 #915100;
+    box-shadow: inset 0 1px 0 #FFE5C4, inset 0 -3px 0 green;
+}
+
+#start-button:after {
+    content: "";
+    height: 100%;
+    width: 100%;
+    padding: 4px;
+    position: absolute;
+    bottom: -15px;
+    left: -4px;
+    z-index: -1;
+    /* background-color: #2B1800; */
+    background-color: rgba(128, 128, 128, 0.522);
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+.col1 {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#myCanvas {
     border: 2px solid red;
-} */
+}
 
 h1 {
     font-family: offbittrialBold;
-    color: #44F814;
+    color: #4bff00;
     text-shadow: 0px 1px 5px white;
     margin: 0 0;
-    font-size: 3rem;
+    font-size: 5rem;
+    letter-spacing: 0.2rem;
+    text-align: center;
 }
