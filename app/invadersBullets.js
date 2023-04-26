@@ -7,7 +7,7 @@ class InvadersBullet {
             size: { w: 6, h: 15 },
             pos: { x: posX, y: posY }
         }
-        this.velY = 3
+        this.velY = 10
         this.initInvadersBullet()
     }
 

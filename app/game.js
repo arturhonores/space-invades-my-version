@@ -15,14 +15,11 @@ const game = {
         pos: { x: undefined, y: undefined },
         size: { w: 70, h: 70 }
     },
-    backgroundInstance: undefined,
-    backgroundSpecs: {
-        pos: undefined,
-        size: { w: 1000, h: 600 }
-    },
     invaders1: [],
     bullets: [],
     invadersBullets: [],
+    gameOverAlert: undefined,
+    youWin: undefined,
     canShoot: true,
     invadersCanShoot: true,
 
@@ -44,6 +41,7 @@ const game = {
             this.collisionBottom() ? this.gameOver() : null
             this.collisionbulletInvaders()
             this.invadersShoot()
+            this.invaders1.length === 0 ? this.levelComplete() : null
         }, 50)
     },
     //CTX
@@ -53,15 +51,13 @@ const game = {
             x: this.canvasSize.w / 2 - this.shipSpecs.size.w / 2,
             y: this.canvasSize.h - this.shipSpecs.size.h
         }
-        this.backgroundSpecs.pos = {
-            x: 0,
-            y: 0
-        }
     },
     //METER IMÁGENES NAVE Y FONDO
     setImageInstances() {
         this.shipInstance = new Image()
         this.shipInstance.src = "../images/ship.png"
+        this.gameOverAlert1()
+        this.youWinAlert()
 
     },
 
@@ -80,7 +76,6 @@ const game = {
     // CREAR INVASORES
     createInvaders1() {
         // console.log("INSTANCIA INVASORES Y DETECTA POSICIÓN")
-        // const invaders1Xposition = [90, 160, 230, 300, 370, 440, 510, 580, 650, 720, 790, 860, 930]
         const invaders1Xposition = [60, 130, 200, 270, 340, 410, 480, 550, 620, 690, 760, 830, 900]
         invaders1Xposition.forEach((duplicated) => {
             return this.invaders1.push(
@@ -126,8 +121,8 @@ const game = {
 
             if (key == 'ArrowRight') {
                 this.shipSpecs.pos.x += 35
-                if (this.shipSpecs.pos.x > 1000 - this.shipSpecs.size.w) {
-                    this.shipSpecs.pos.x = 1000 - this.shipSpecs.size.w
+                if (this.shipSpecs.pos.x > 980 - this.shipSpecs.size.w) {
+                    this.shipSpecs.pos.x = 980 - this.shipSpecs.size.w
                 }
             }
             if (key == 'ArrowUp' && this.canShoot) {
@@ -200,7 +195,7 @@ const game = {
 
             setTimeout(() => {
                 this.invadersCanShoot = true
-            }, 1000)
+            }, 900)
         }
     },
 
@@ -209,9 +204,22 @@ const game = {
         this.bullets.push(new ShipBullets(this.ctx, this.canvasSize, this.shipBulletsInstance, this.shipSpecs.pos.x + 30, 585 - this.shipSpecs.size.h))
     },
 
+    gameOverAlert1() {
+        this.gameOverAlert = new gameOverImages(this.ctx, this.canvasSize, this.gameOverInstance)
+    },
+
+    youWinAlert() {
+        this.youWin = new YouWin(this.ctx, this.canvasSize, this.youWinInstance)
+    },
+
 
     gameOver() {
         clearInterval(this.intervalId)
-    }
+        this.gameOverAlert.drawKilledImage()
+    },
 
+    levelComplete() {
+        clearInterval(this.intervalId)
+        this.youWin.drawYouwinImage()
+    }
 }

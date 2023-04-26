@@ -27,7 +27,7 @@ class Invaders1 {
     }
 
     move() {
-        this.invaders1Specs.pos.y += .4
+        this.invaders1Specs.pos.y += .1
     }
 }
 
