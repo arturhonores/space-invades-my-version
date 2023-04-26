@@ -159,11 +159,9 @@ const game = {
                     this.bullets[i].shipBulletsSpecs.pos.y + this.bullets[i].shipBulletsSpecs.size.h >= this.invaders1[j].invaders1Specs.pos.y &&
                     this.bullets[i].shipBulletsSpecs.pos.y <= this.invaders1[j].invaders1Specs.pos.y + this.invaders1[j].invaders1Specs.size.h
                 ) {
-
                     // Elimina la bala y el invasor de sus respectivos arrays
                     this.bullets.splice(i, 1);
                     this.invaders1.splice(j, 1);
-
                     // Detiene el bucle interno para evitar múltiples colisiones con la misma bala
                     break;
                 }
@@ -175,15 +173,20 @@ const game = {
     invadersShoot() {
         if (this.invadersCanShoot) {
             this.invadersCanShoot = false
-            for (let i = 0; i < this.invaders1.length; i++) {
-                const currentInvader = this.invaders1[i]
-                const bulletPosX = currentInvader.invaders1Specs.pos.x + currentInvader.invaders1Specs.size.w / 2 - 10
-                const bulletPosY = currentInvader.invaders1Specs.pos.y + currentInvader.invaders1Specs.size.h / 2
-                this.invadersBullets.push(new InvadersBullet(this.ctx, this.canvasSize, this.invadersBulletsInstance, bulletPosX, bulletPosY))
-            }
+            // for (let i = 0; i < this.invaders1.length; i++) {
+            //     const currentInvader = this.invaders1[i]
+            //     const bulletPosX = currentInvader.invaders1Specs.pos.x + currentInvader.invaders1Specs.size.w / 2 - 10
+            //     const bulletPosY = currentInvader.invaders1Specs.pos.y + currentInvader.invaders1Specs.size.h / 2
+            //     this.invadersBullets.push(new InvadersBullet(this.ctx, this.canvasSize, this.invadersBulletsInstance, bulletPosX, bulletPosY))
+            // }
+            const currentInvader = this.invaders1[Math.floor(Math.random() * this.invaders1.length)]
+            const bulletPosX = currentInvader.invaders1Specs.pos.x + currentInvader.invaders1Specs.size.w / 2 - 10
+            const bulletPosY = currentInvader.invaders1Specs.pos.y + currentInvader.invaders1Specs.size.h / 2
+            this.invadersBullets.push(new InvadersBullet(this.ctx, this.canvasSize, this.invadersBulletsInstance, bulletPosX, bulletPosY))
+
             setTimeout(() => {
                 this.invadersCanShoot = true
-            }, 8000)
+            }, 1000)
         }
     },
 
