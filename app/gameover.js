@@ -12,7 +12,7 @@ class gameOverImages {
 
     initKilledImage() {
         this.gameOverInstance = new Image()
-        this.gameOverInstance.src = "../images/killedImage.jpg"
+        this.gameOverInstance.src = "../images/haspalmado.jpg"
     }
     drawKilledImage() {
 
