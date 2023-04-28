@@ -18,6 +18,7 @@ const game = {
     invaders1: [],
     bullets: [],
     invadersBullets: [],
+    hardArr: [],
     gameOverAlert: undefined,
     youWin: undefined,
     canShoot: true,
@@ -26,9 +27,12 @@ const game = {
     //INIT
     init() {
         this.setContext()
+        setTimeout(() => this.createHard(), 14000)
         this.setImageInstances()
         this.setEventListeners()
         this.createInvaders1()
+        this.startSound()
+        this.startTime = new Date().getTime();
         this.start()
     },
     // CORAZÓN
@@ -44,6 +48,37 @@ const game = {
             this.invaders1.length === 0 ? this.levelComplete() : null
         }, 50)
     },
+
+    //MÚSICAS
+    startSound() {
+        this.backgroundSound = new Audio()
+        this.backgroundSound.src = './audio/backgroundSound.mp3'
+        this.backgroundSound.volume = 1
+        this.backgroundSound.play()
+    },
+
+    shootSound() {
+        this.disparonave = new Audio()
+        this.disparonave.src = './audio/disparonave.mp3'
+        this.disparonave.volume = 0.9
+        this.backgroundSound.loop = true;
+        this.disparonave.play()
+    },
+
+    gameOverSound() {
+        this.gameoversound = new Audio()
+        this.gameoversound.src = './audio/gameoversound.mp3'
+        this.gameoversound.volume = 1
+        this.gameoversound.play()
+    },
+
+    victorySound() {
+        this.victorysound = new Audio()
+        this.victorysound.src = './audio/victoria.mp3'
+        this.victorysound.volume = 1
+        this.victorysound.play()
+    },
+
     //CTX
     setContext() {
         this.ctx = document.getElementById("myCanvas").getContext("2d")
@@ -87,9 +122,17 @@ const game = {
 
     },
 
+    // pintar Hard y que aparezca
+    createHard() {
+        console.log("HARRDDDDDDDD")
+        this.hardArr.push(
+            new Hard(this.ctx, this.canvasSize, this.hardInstance, 10, 200, 40, 3)
+        )
+    },
+
     //DIBUJAR TODO
     drawAll() {
-        console.log("DIBUJANDO INVASORES")
+        // console.log("DIBUJANDO INVASORES")
         this.frameIndex++
         this.drawShip()
         this.invaders1.forEach((eachInvader) => {
@@ -101,7 +144,13 @@ const game = {
         this.invadersBullets.forEach((eachInvaderbullet) => {
             eachInvaderbullet.drawInvadersBullet()
         })
+        this.hardArr.forEach((eachHard) => {
+            eachHard.drawHard()
+        })
     },
+
+
+
 
     // BORRAR TODO
     clearAll() {
@@ -178,7 +227,7 @@ const game = {
     },
 
     collisionBottom() {
-        console.log("MÉTODO COLISIÓN INVADER vs BOTTOM")
+        // console.log("MÉTODO COLISIÓN INVADER vs BOTTOM")
         return this.invaders1.some((inv) => {
             return inv.invaders1Specs.pos.y + inv.invaders1Specs.size.h >= this.canvasSize.h
         })
@@ -193,15 +242,26 @@ const game = {
             const invaderBulletPosY = currentInvader.invaders1Specs.pos.y + currentInvader.invaders1Specs.size.h / 2
             this.invadersBullets.push(new InvadersBullet(this.ctx, this.canvasSize, this.invadersBulletsInstance, invaderBulletPosX, invaderBulletPosY))
 
+            const currentTime = new Date().getTime()
+            const timeElapsed = currentTime - this.startTime
+
+            let shootingInterval
+            if (timeElapsed >= 13000) {
+                shootingInterval = 450
+            } else {
+                shootingInterval = 700
+            }
+
             setTimeout(() => {
                 this.invadersCanShoot = true
-            }, 900)
+            }, shootingInterval)
         }
     },
 
     shipShoot() {
-        console.log("nave dispara")
+        // console.log("nave dispara")
         this.bullets.push(new ShipBullets(this.ctx, this.canvasSize, this.shipBulletsInstance, this.shipSpecs.pos.x + 30, 585 - this.shipSpecs.size.h))
+        this.shootSound()
     },
 
     gameOverAlert1() {
@@ -215,11 +275,16 @@ const game = {
 
     gameOver() {
         clearInterval(this.intervalId)
+        this.gameOverSound()
         this.gameOverAlert.drawKilledImage()
+        this.backgroundSound.pause()
     },
 
     levelComplete() {
         clearInterval(this.intervalId)
         this.youWin.drawYouwinImage()
+        this.backgroundSound.pause()
+        this.victorySound()
+
     }
 }

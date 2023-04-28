@@ -3,6 +3,16 @@
     src: url("../fonts/OffBitTrial-Bold.otf");
 }
 
+@font-face {
+    font-family: offbittrialRegular;
+    src: url("../fonts/OffBitTrial-Regular.otf");
+}
+
+@font-face {
+    font-family: offbittrialDot;
+    src: url("../fonts/OffBitTrial-Dot.otf");
+}
+
 body {
     padding: 0;
     margin: 0;
@@ -129,11 +139,28 @@ h1 {
     border-radius: 5px;
 }
 
+.instructions {
+    padding-bottom: 2rem;
+}
+
 .instructions h2 {
     color: white;
     font-family: offbittrialBold;
-    padding-top: 4rem;
+    padding-top: 1.5rem;
     text-align: center;
+}
+
+.instructions ul {
+    color: white;
+    list-style-image: url('../images/viñeta.svg');
+}
+
+
+
+.instructions li {
+    font-family: offbittrialDot;
+    font-size: 1.2rem;
+    padding: 3px 0;
 }
 
 
@@ -141,7 +168,10 @@ h1 {
     border: 2px solid red;
 } */
 
-
+.instructions img {
+    display: block;
+    margin: 0 auto;
+}
 
 .col2 {
     position: relative;
