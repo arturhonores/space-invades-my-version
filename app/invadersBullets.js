@@ -13,7 +13,7 @@ class InvadersBullet {
 
     initInvadersBullet() {
         this.invadersBulletInstance = new Image()
-        this.invadersBulletInstance.src = "../images/bulletinvader.svg"
+        this.invadersBulletInstance.src = "../images/bulletinvader.png"
     }
 
     drawInvadersBullet() {
